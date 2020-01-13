@@ -2,6 +2,7 @@ package actions
 
 import (
 	"github.com/urfave/cli/v2"
+	"grename/internal/database"
 	"grename/internal/metadata"
 )
 
@@ -17,6 +18,19 @@ func (action *Import) Execute(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	db, err := database.InitDatabase(&database.Credentials{
+		Driver:   "sqlite3",
+		Database: "./var/app.db",
+	})
+	println(db)
+	if err != nil {
+		println("DB error")
+		println(err.Error())
+		return err
+	}
+	//var f models.File
+	//db.First(f)
 	println("renameTemplate: " + renameTemplate)
 	println("source: " + source)
 	println("destination: " + destination)
