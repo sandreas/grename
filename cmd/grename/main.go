@@ -17,29 +17,8 @@ func main() {
 	importFlags := []cli.Flag{
 		// &cli.BoolFlag{Name: "keep-duplicates", Usage: "keep duplicate files"},
 		&cli.StringFlag{Name: "tpl", Usage: "filename template"},
+		&cli.StringFlag{Name: "include-media-types", Value: "image,video", Usage: "media types to include"},
 	}
-	// db, err := gorm.Open("sqlite3", "test.db")
-	//  if err != nil {
-	//    panic("failed to connect database")
-	//  }
-	//  defer db.Close()
-	//
-	//  // Migrate the schema
-	//  db.AutoMigrate(&Product{})
-	//
-	//  // Create
-	//  db.Create(&Product{Code: "L1212", Price: 1000})
-	//
-	//  // Read
-	//  var product Product
-	//  db.First(&product, 1) // find product with id 1
-	//  db.First(&product, "code = ?", "L1212") // find product with code l1212
-	//
-	//  // Update - update product's price to 2000
-	//  db.Model(&product).Update("Price", 2000)
-	//
-	//  // Delete - delete product
-	//  db.Delete(&product)
 
 	app := cli.NewApp()
 	app.Name = "grename"
@@ -58,7 +37,7 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
-		_ = fmt.Errorf("error: %s", err)
+		println(fmt.Errorf("error: %s", err))
 	}
 }
 

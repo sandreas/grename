@@ -6,32 +6,22 @@ import (
 	"time"
 )
 
+type TagType uint
+type TagGroup uint
+
 // DEFAULTS
 const (
-	TagGroupDefault = 0
-	TagTypeDefault  = 0
+	TagGroupDefault uint8 = 0
+	TagTypeDefault  uint8 = 0
 )
 
 // EXIF
 const (
-	TagGroupExif     = 1
-	TagTypeExifMake  = 1
-	TagTypeExifModel = 2
-	TagTypeExifDate  = 3
+	TagGroupExif     uint8 = 1
+	TagTypeExifMake  uint8 = 1
+	TagTypeExifModel uint8 = 2
+	TagTypeExifDate  uint8 = 3
 )
-
-type TagType uint
-type TagGroup uint
-
-//type Model struct {
-//	ID         string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
-//	CreatedAt time.Time
-//	UpdatedAt time.Time
-//}
-// Model base model definition, including fields `ID`, `CreatedAt`, `UpdatedAt`, `DeletedAt`, which could be embedded in your models
-//    type User struct {
-//      gorm.Model
-//    }
 
 type Model struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key"`
@@ -67,32 +57,3 @@ type FileTag struct {
 	Group  uint8     `gorm:"default:0"`
 	Type   uint8     `gorm:"default:0"`
 }
-
-/*
-type Tag struct {
-	ID         string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
-	Email        string  `gorm:"type:varchar(100);unique_index"`
-	Address      string  `gorm:"index:addr"` // create index with name `addr` for address
-	IgnoreMe     int     `gorm:"-"` // ignore this field
-
-}
-
-
-
-// gorm.Model definition
-type Model struct {
-	ID        uint `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-	Name string `gorm:"default:'galeone'"`
-
-}
-
-// Inject fields `ID`, `CreatedAt`, `UpdatedAt`, `DeletedAt` into model `User`
-type User struct {
-	gorm.Model
-	Name string
-}
-
-*/

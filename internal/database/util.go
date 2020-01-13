@@ -37,7 +37,6 @@ func InitDatabase(u *Credentials) (*gorm.DB, error) {
 			return nil, err
 		}
 		db.AutoMigrate(&File{}, &Tag{}, &FileTag{})
-		// db.AutoMigrate(&models.File{})
 		return db, nil
 	}
 	return nil, errors.New("")
@@ -50,25 +49,3 @@ func touchFile(name string) error {
 	}
 	return file.Close()
 }
-
-//  if err != nil {
-//    panic("failed to connect database")
-//  }
-//  defer Db.Close()
-//
-//  // Migrate the schema
-//  Db.AutoMigrate(&Product{})
-//
-//  // Create
-//  Db.Create(&Product{Code: "L1212", Price: 1000})
-//
-//  // Read
-//  var product Product
-//  Db.First(&product, 1) // find product with id 1
-//  Db.First(&product, "code = ?", "L1212") // find product with code l1212
-//
-//  // Update - update product's price to 2000
-//  Db.Model(&product).Update("Price", 2000)
-//
-//  // Delete - delete product
-//  Db.Delete(&product)
