@@ -16,6 +16,7 @@ func main() {
 
 	importFlags := []cli.Flag{
 		&cli.BoolFlag{Name: "keep-duplicates", Usage: "transfer source modify times to destination"},
+		&cli.StringFlag{Name: "tpl", Usage: "filename template"},
 	}
 
 	app := cli.NewApp()

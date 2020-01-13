@@ -17,3 +17,6 @@
 /dist/
 !/dist/.gitkeep
 /grename.iml
+/var
+!/var/prepare-samples.sh
+!/var/samples/.gitkeep
