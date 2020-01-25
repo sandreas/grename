@@ -16,8 +16,33 @@ type Exif struct {
 	//XResolution // VALUE=[72/1]
 	//YResolution // VALUE=[72/1]
 	//ResolutionUnit // VALUE=[2]
+	// 2006-01-02T15:04:05-0700
 	DateTime time.Time // VALUE=[2017:12:02 08:18:50]
 }
+func (e *Exif) Ss() string {
+	return e.DateTime.Format("05")
+}
+func (e *Exif) Mm() string {
+	return e.DateTime.Format("04")
+}
+func (e *Exif) Hh() string {
+	return e.DateTime.Format("15")
+}
+
+func (e *Exif) YYYY() string {
+	return e.DateTime.Format("2006")
+}
+
+func (e *Exif) MM() string {
+	return e.DateTime.Format("01")
+}
+
+
+func (e *Exif) DD() string {
+	return e.DateTime.Format("02")
+}
+
+
 
 func exifReadFromFile(filepathArgument string) (*Exif, error) {
 	println("import executed")

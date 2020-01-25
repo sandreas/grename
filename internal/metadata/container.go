@@ -22,11 +22,16 @@ func ReadFromFile(filepathArgument string) (*Container, error) {
 	e, err := exifReadFromFile(filepathArgument)
 	if err == nil {
 		container.Exif = e
+	} else {
+		container.Exif = &Exif {}
 	}
+
 
 	f, err := fileReadFromFile(filepathArgument)
 	if err == nil {
 		container.File = f
+	}  else {
+		container.File = &File{}
 	}
 
 	return container, nil

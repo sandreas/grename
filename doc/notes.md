@@ -1,3 +1,67 @@
+#  planned command line usage
+It is possible that it would be more elegant using a configuration file like
+`$HOME/.grename/config.toml`, that might look like this:
+
+``` 
+[global]
+library = "/home/peter/grename-lib/"
+keep-duplicates = false
+hash-algorithm = blake3
+
+[database]
+driver = mysql
+host = localhost
+# ...
+
+[tags]
+ignore = ["old", "new"]
+
+[import]
+  [import.images]
+  mimetypes = ["image/jpeg", "image/raw"]
+  template = ".MimeMediaType/.MimeSubType/.ExifModel/.ExifYear..."
+
+  [import.videos]
+  mimetypes = ["video"]
+
+```
+## import 
+imports (moves or copies) all media from source into a destination
+```
+grename import <source-path> <destinatiion-path>
+```
+
+Parameters
+- mode=copy,move: decide, if source files should be removed (default)
+- keep-duplicates: decide, if source files that already exist, should be kept (default:false)
+
+## find
+find all items by a specific query string
+
+```
+grename find <destination-path>
+```
+Parameters:
+- --add-tag: adds tags to a find result (perhaps an extra command: modify)
+- --remove-tag: removes tags from a find result
+- --search-files: decides whether to search in tags only or also in files table
+
+## cleanup
+compare an existing database to an existing destination path and update existing or remove all non-existing items
+```
+grename cleanup <destination-path>
+```
+
+## serve
+start a web server
+```
+grename serve <destination-path>
+```
+
+Parameters:
+- --watch: directories to watch and auto-import with the given settings
+
+
 # Database
 
 - files

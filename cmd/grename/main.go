@@ -16,8 +16,8 @@ func main() {
 
 	importFlags := []cli.Flag{
 		// &cli.BoolFlag{Name: "keep-duplicates", Usage: "keep duplicate files"},
-		&cli.StringFlag{Name: "tpl", Usage: "filename template"},
-		&cli.StringFlag{Name: "include-media-types", Value: "image,video", Usage: "media types to include"},
+		// &cli.StringFlag{Name: "tpl", Usage: "filename template"},
+		// &cli.StringFlag{Name: "include-media-types", Value: "image,video", Usage: "media types to include"},
 	}
 
 	app := cli.NewApp()
@@ -48,3 +48,25 @@ func mergeFlags(flagsToMerge ...[]cli.Flag) []cli.Flag {
 	}
 	return mergedFlags
 }
+
+/*
+func (action *AbstractAction) initLogging() {
+	if !action.CliParameters.Debug {
+		log.SetFlags(0)
+		log.SetOutput(ioutil.Discard)
+		return
+	}
+	log.SetOutput(os.Stdout)
+
+
+	logFileName := homeDir + "/graft.log"
+	logFile, err := os.OpenFile(logFileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Println("could not open logfile: ", logFile, err)
+		return
+	}
+	defer logFile.Close()
+	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(mw)
+}
+*/
