@@ -1,6 +1,9 @@
 package log
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 /*
 type MyJSONFormatter struct {
@@ -38,31 +41,33 @@ const (
 )
 
 type Formatter interface {
-	Format(level int, v ...interface{})  ([]byte, error)
+	Format(level int, v ...interface{}) ([]byte, error)
 }
 
+/*
 type RawFormatter struct {
 }
 
 func (f *RawFormatter) Format(level int, v ...interface{}) ([]byte, error){
 	return  []byte(fmt.Sprint(v...)), nil
 }
+*/
 
 type FileFormatter struct {
 }
 
-func (f *FileFormatter) Format(level int, v ...interface{}) ([]byte, error){
-	return  []byte(fmt.Sprint(v...)), nil
+func (f *FileFormatter) Format(level int, v ...interface{}) ([]byte, error) {
+	logLine := fmt.Sprintf("%s [%s] %s", time.Now().Format(time.RFC3339), levelToString(level), fmt.Sprintln(v...))
+	return []byte(logLine), nil
 }
-
 
 type ColorTerminalFormatter struct {
 }
 
-func (f *ColorTerminalFormatter) Format(level int, v ...interface{}) ([]byte, error){
-	var color  int
+func (f *ColorTerminalFormatter) Format(level int, v ...interface{}) ([]byte, error) {
+	var color int
 	var brightenPrefix string
-	switch level  {
+	switch level {
 	case LevelTrace:
 		color = TerminalColorBlack
 		brightenPrefix = TerminalPrefixBrighten

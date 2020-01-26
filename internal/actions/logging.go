@@ -1,20 +1,17 @@
 package actions
 
 import (
-	"github.com/urfave/cli/v2"
-	"grename/internal/log"
 	"os"
 	"os/user"
 	"path/filepath"
 )
 
-func InitLogging(c *cli.Context) {
-	termLevel := log.LevelInfo
-	log.AddColorTerminalTarget(termLevel)
-
-	//if fileLevel > log.LevelOff {
-	//	f, err := log.AddFileTarget()
-	//}
+func CreateDefaultLogFileName(projectName, logFileName string) string {
+	dir, err := CreateLogDir(projectName)
+	if err != nil {
+		return ""
+	}
+	return filepath.Clean(dir + "/" + logFileName)
 }
 
 func CreateConfigDir(projectName string) (string, error) {
@@ -30,12 +27,12 @@ func createHomeDir(projectNameDir, subDir, envVarName string) (string, error) {
 	if envDir == "" {
 		u, _ := user.Current()
 		envDir = u.HomeDir
-		subDir = "."+subDir
+		projectNameDir = "." + projectNameDir
 	}
 
 	homeDir := filepath.Clean(envDir + "/" + projectNameDir + "/" + subDir)
 	if _, err := os.Stat(homeDir); err != nil {
-		if err := os.Mkdir(homeDir, os.FileMode(0755)); err != nil {
+		if err := os.MkdirAll(homeDir, os.FileMode(0755)); err != nil {
 			return homeDir, err
 		}
 	}

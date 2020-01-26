@@ -1,4 +1,5 @@
 package log
+
 /*
 func main() {
     //Close log writer when exit
@@ -13,8 +14,8 @@ func main() {
 }
 */
 
-
 var defaultLogger *Logger
+
 func init() {
 	defaultLogger = NewLogger()
 }
@@ -27,42 +28,53 @@ func AddTarget(target *Target) {
 	defaultLogger.AddTarget(target)
 }
 
-func Debug(v ...interface{})  {
+func Debug(v ...interface{}) {
 	defaultLogger.Debug(v...)
 }
 
-func Info(v ...interface{})  {
+func Info(v ...interface{}) {
 	defaultLogger.Info(v...)
 }
 
-func Warn(v ...interface{})  {
+func Warn(v ...interface{}) {
 	defaultLogger.Warn(v...)
 }
 
-func Error(v ...interface{})  {
+func Error(v ...interface{}) {
 	defaultLogger.Error(v...)
 }
 
-func Fatal(v ...interface{})  {
+func Fatal(v ...interface{}) {
 	defaultLogger.Fatal(v...)
 }
 
-func Debugf(format string, v ...interface{})  {
+func Debugf(format string, v ...interface{}) {
 	defaultLogger.Debugf(format, v...)
 }
 
-func Infof(format string, v ...interface{})  {
+func Infof(format string, v ...interface{}) {
 	defaultLogger.Infof(format, v...)
 }
 
-func Warnf(format string, v ...interface{})  {
+func Warnf(format string, v ...interface{}) {
 	defaultLogger.Warnf(format, v...)
 }
 
-func Errorf(format string, v ...interface{})  {
+func Errorf(format string, v ...interface{}) {
 	defaultLogger.Errorf(format, v...)
 }
 
-func Fatalf(format string, v ...interface{})  {
+func Fatalf(format string, v ...interface{}) {
 	defaultLogger.Fatalf(format, v...)
+}
+
+func Flush() error {
+	return defaultLogger.Flush()
+}
+
+func WithTargets(targets ...*Target) error {
+	return defaultLogger.WithTargets(targets...)
+}
+func RemoveAllTargets() {
+	defaultLogger.RemoveAllTargets()
 }

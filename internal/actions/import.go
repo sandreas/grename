@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"grename/internal/crypt"
 	"grename/internal/database"
+	"grename/internal/log"
 	"grename/internal/metadata"
 	"lukechampine.com/blake3"
 	"os"
@@ -17,14 +18,13 @@ import (
 	"text/template/parse"
 )
 
-
 type ImportSetting struct {
 	MimeTypes    []string
 	NameTemplate string
 }
 
 type ImportFile struct {
-	Source string
+	Source        string
 	ImportSetting *ImportSetting
 	File          *database.File
 }
@@ -40,11 +40,8 @@ type ImportFile struct {
 // - dump tags to iptc keywords (no lib available) - before hash remove iptc keywords
 // - web / serve start a webserver with static
 
-
 type Import struct {
 }
-
-
 
 func ListTemplFields(t *template.Template) []string {
 	return listNodeFields(t.Tree.Root, nil)
@@ -63,20 +60,31 @@ func listNodeFields(node parse.Node, res []string) []string {
 }
 
 func (action *Import) Execute(c *cli.Context) error {
-
-	InitLogging(c)
-
 	var err error
+
+	log.WithTargets(
+		log.NewColorTerminalTarget(os.Stdout, log.LevelDebug, log.LevelInfo),
+		log.NewColorTerminalTarget(os.Stderr, log.LevelWarn, log.LevelFatal),
+		log.NewFileWrapperTarget(CreateDefaultLogFileName(ProjectName, "main.log"), log.LevelDebug, log.LevelFatal),
+	)
+	defer log.Flush()
+
+	log.Debug("Debug")
+	log.Info("Info")
+	log.Warn("Warn")
+	log.Error("Error")
+	log.Fatal("Fatal")
+
 	importPath := filepath.Clean(c.Args().First())
 	destinationPath := filepath.Clean(c.Args().Get(1))
 	dbPath := filepath.Clean(destinationPath + "/grename.db")
 	importSettings := []*ImportSetting{
 		{
-			MimeTypes:    []string{"image",},
+			MimeTypes:    []string{"image"},
 			NameTemplate: "{{.File.MimeType}}/{{.Exif.Model}}/{{.Exif.YYYY}}/{{.Exif.MM}}/{{.Exif.DD}}/{{.Exif.YYYY}}{{.Exif.MM}}{{.Exif.DD}}_{{.Exif.Hh}}{{.Exif.Mm}}{{.Exif.Ss}}.{{.File.Extension}}",
 		},
 		{
-			MimeTypes:    []string{"video",},
+			MimeTypes:    []string{"video"},
 			NameTemplate: "{{.File.MimeType}}/{{.Exif.Model}}/{{.Exif.YYYY}}/{{.Exif.MM}}/{{.Exif.DD}}/{{.Exif.YYYY}}{{.Exif.MM}}{{.Exif.DD}}_{{.Exif.Hh}}{{.Exif.Mm}}{{.Exif.Ss}}.{{.File.Extension}}",
 		},
 	}
@@ -92,7 +100,7 @@ func (action *Import) Execute(c *cli.Context) error {
 
 	fs := afero.NewOsFs()
 
-	err = afero.Walk(fs, importPath,  func(path string, info os.FileInfo, err error) error {
+	err = afero.Walk(fs, importPath, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
@@ -127,7 +135,7 @@ func (action *Import) Execute(c *cli.Context) error {
 			return err
 		}
 		importFiles = append(importFiles, &ImportFile{
-			Source: path,
+			Source:        path,
 			ImportSetting: foundImportSetting,
 			File: &database.File{
 				MimeMediaType: fileMediaType,
@@ -144,8 +152,6 @@ func (action *Import) Execute(c *cli.Context) error {
 	for _, importFile := range importFiles {
 		f := importFile.File
 
-
-
 		m, err := metadata.ReadFromFile(importFile.Source)
 		if err != nil {
 			return err
@@ -153,9 +159,9 @@ func (action *Import) Execute(c *cli.Context) error {
 
 		t, err := template.New("destination").Parse(importFile.ImportSetting.NameTemplate)
 
-		templateVars:= ListTemplFields(t)
+		templateVars := ListTemplFields(t)
 		for _, templateVar := range templateVars {
-			tmpTemplate, err := template.New("tmp").Parse( templateVar)
+			tmpTemplate, err := template.New("tmp").Parse(templateVar)
 			if err != nil {
 				println("failed to check template var " + templateVar)
 				continue
@@ -172,20 +178,17 @@ func (action *Import) Execute(c *cli.Context) error {
 			}
 		}
 
-
 		if err != nil {
-			println("!!! template parsing error - " + importFile.Source+ ": " + err.Error())
+			println("!!! template parsing error - " + importFile.Source + ": " + err.Error())
 			continue
 		}
-
 
 		var tplOutput bytes.Buffer
 		err = t.Execute(&tplOutput, m)
 		if err != nil {
-			println("!!! template rendering error - " + importFile.Source+ ": " + err.Error())
+			println("!!! template rendering error - " + importFile.Source + ": " + err.Error())
 			continue
 		}
-
 
 		var fullDestinationPath string
 		// TODO replace newlines
@@ -194,15 +197,15 @@ func (action *Import) Execute(c *cli.Context) error {
 		location = strings.TrimSuffix(location, extension)
 		locationSuffix := ""
 		i := 0
-		for  {
+		for {
 			i++
-			if i > 999  {
+			if i > 999 {
 				panic("999 is the max index for existing files that is supported")
 			}
-			relativeDestinationPath := location+locationSuffix+extension
+			relativeDestinationPath := location + locationSuffix + extension
 			fullDestinationPath = filepath.Clean(destinationPath + "/" + relativeDestinationPath)
 			stat, err := fs.Stat(fullDestinationPath)
-			if stat == nil || os.IsNotExist(err)  {
+			if stat == nil || os.IsNotExist(err) {
 				f.Location = relativeDestinationPath
 				break
 			}
@@ -233,9 +236,9 @@ func (action *Import) Execute(c *cli.Context) error {
 
 		if db.NewRecord(f) {
 			// os.Rename(importFile.Source, fullDestinationPath)
-			println("rename: " + importFile.Source + " => " +fullDestinationPath)
+			println("rename: " + importFile.Source + " => " + fullDestinationPath)
 
-		} else  {
+		} else {
 			// os.Remove(importFile.Source)
 			println("remove: " + importFile.Source)
 		}
