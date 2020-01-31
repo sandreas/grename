@@ -40,9 +40,6 @@ github.com/russross/blackfriday/v2 v2.0.1 h1:lPqVAte+HuHNfhJ/0LC98ESWRz8afy9tM/0
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/sandreas/afero v1.2.3 h1:1OeyeLBIhsNiGBmlKF6zX4RwpHqUrcI46BwOywnb4Cc=
 github.com/sandreas/afero v1.2.3/go.mod h1:999GQJCl271FZoAciznHKRb25r3I8KNO933V07JR4LM=
-github.com/sandreas/log v0.0.0-20200127120636-e16d8954b14c h1:AOQOjD57Sc4Nw/m/yD06X64vmLPPrinX0EHts89qRvI=
-github.com/sandreas/log v0.0.0-20200127125919-d1634e139f77 h1:mb2kdpw9JBZ1OgDjGfYY9fCTMRen5t1vyGovT2J6BRM=
-github.com/sandreas/log v0.0.0-20200127125919-d1634e139f77/go.mod h1:OUD4F5pcV774ZdPHjqszFoAVkNeERmUUrxWKFKjlX5E=
 github.com/sandreas/log v0.0.0-20200128061605-a0c5436a5b40 h1:GhXMnw/YTlwVVC1YH8STvvf/HfVqr44v+FuiiiBcgbU=
 github.com/sandreas/log v0.0.0-20200128061605-a0c5436a5b40/go.mod h1:OUD4F5pcV774ZdPHjqszFoAVkNeERmUUrxWKFKjlX5E=
 github.com/satori/go.uuid v1.2.0 h1:0uYX9dsZ2yD7q2RtLRtPSdGDWzjeM3TbMJP9utgA0ww=

@@ -37,14 +37,8 @@ func (base *Model) BeforeCreate(scope *gorm.Scope) error {
 
 type Log struct {
 	*Model
-	Message string     `gorm:"type:varchar(1000)"`
-	Context LogContext `json:"context,omitempty"`
-}
-
-type LogContext struct {
-	Action string
-	// Data map
-
+	Message string                 `gorm:"type:varchar(1000)"`
+	Context map[string]interface{} `json:"context,omitempty"`
 }
 
 type File struct {

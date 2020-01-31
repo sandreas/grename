@@ -66,7 +66,9 @@ func (action *Import) Execute(c *cli.Context) error {
 
 	var err error
 	importPath := filepath.Clean(c.Args().First())
+	importPathAbs, err := filepath.Abs(importPath)
 	destinationPath := filepath.Clean(c.Args().Get(1))
+	log.Info(importPathAbs)
 	dbPath := filepath.Clean(fmt.Sprintf("%s/%s.db", destinationPath, ProjectName))
 	importSettings := []*ImportSetting{
 		{
@@ -142,7 +144,9 @@ func (action *Import) Execute(c *cli.Context) error {
 	for _, importFile := range importFiles {
 		f := importFile.File
 
-		m, err := metadata.ReadFromFile(importFile.Source)
+		m := new(metadata.MetaContainer)
+
+		err := m.ReadFromFile(importFile.Source)
 		if err != nil {
 			return err
 		}
@@ -225,6 +229,7 @@ func (action *Import) Execute(c *cli.Context) error {
 		}
 
 		if db.NewRecord(f) {
+
 			// os.Rename(importFile.Source, fullDestinationPath)
 			println("rename: " + importFile.Source + " => " + fullDestinationPath)
 
@@ -232,6 +237,12 @@ func (action *Import) Execute(c *cli.Context) error {
 			// os.Remove(importFile.Source)
 			println("remove: " + importFile.Source)
 		}
+
+		createDbLog(db, fmt.Sprintf("imported file"), map[string]interface{}{
+			"action": "import",
+			"source": importFile.Source,
+			"hash":   importFile.File.Hash,
+		})
 
 		//var f models.FileMeta
 		//db.First(f)

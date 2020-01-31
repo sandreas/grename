@@ -1,8 +1,10 @@
 package actions
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/sandreas/log"
 	"github.com/urfave/cli/v2"
+	"grename/internal/database"
 	"os"
 )
 
@@ -33,4 +35,11 @@ func initLogging(settings *ActionParams) {
 			log.NewColorTerminalTarget(os.Stderr, log.LevelWarn, log.LevelFatal),
 		)
 	}
+}
+
+func createDbLog(db *gorm.DB, message string, data map[string]interface{}) {
+	db.Create(&database.Log{
+		Message: message,
+		Context: data,
+	})
 }
