@@ -1,38 +1,25 @@
 package metadata
 
-type Container struct {
-	File *File
+import "github.com/sandreas/log"
+
+type MetaContainer struct {
+	File *FileMeta
 	Exif *Exif
-	Tags []*Tag
 }
 
-type TagType int
+func (container *MetaContainer) ReadFromFile(filename string) error {
+	var err error
 
-const (
-	TagTypeCustom TagType = 0
-)
-
-type Tag struct {
-	Type  TagType
-	Value string
-}
-
-func ReadFromFile(filepathArgument string) (*Container, error) {
-	container := new(Container)
-	e, err := exifReadFromFile(filepathArgument)
-	if err == nil {
-		container.Exif = e
-	} else {
-		container.Exif = &Exif {}
+	container.Exif = &Exif{}
+	err = container.Exif.ReadFromFile(filename)
+	if err != nil {
+		log.Warnf("could not read exif from file %s: %s", filename, err.Error())
 	}
 
-
-	f, err := fileReadFromFile(filepathArgument)
-	if err == nil {
-		container.File = f
-	}  else {
-		container.File = &File{}
+	container.File = &FileMeta{}
+	err = container.File.ReadFromFile(filename)
+	if err != nil {
+		log.Warnf("could not file meta from file %s: %s", filename, err.Error())
 	}
-
-	return container, nil
+	return err
 }

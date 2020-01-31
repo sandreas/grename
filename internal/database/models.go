@@ -35,6 +35,18 @@ func (base *Model) BeforeCreate(scope *gorm.Scope) error {
 	return scope.SetColumn("ID", uuid.NewV4())
 }
 
+type Log struct {
+	*Model
+	Message string     `gorm:"type:varchar(1000)"`
+	Context LogContext `json:"context,omitempty"`
+}
+
+type LogContext struct {
+	Action string
+	// Data map
+
+}
+
 type File struct {
 	*Model
 	MimeMediaType string `gorm:"type:varchar(30)"`

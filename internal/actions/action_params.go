@@ -1,6 +1,10 @@
 package actions
 
-import "github.com/urfave/cli/v2"
+import (
+	"github.com/sandreas/log"
+	"github.com/urfave/cli/v2"
+	"os"
+)
 
 type ActionParams struct {
 	Quiet bool `arg:"help:do not show any output"`
@@ -13,5 +17,20 @@ func parseActionParams(c *cli.Context) *ActionParams {
 		Quiet: c.Bool("quiet"),
 		Force: c.Bool("force"),
 		Debug: c.Bool("debug"),
+	}
+}
+
+func initLogging(settings *ActionParams) {
+	if settings.Quiet {
+		log.RemoveAllTargets()
+	} else {
+		startLogLevel := log.LevelInfo
+		if settings.Debug {
+			startLogLevel = log.LevelDebug
+		}
+		log.WithTargets(
+			log.NewColorTerminalTarget(os.Stdout, startLogLevel, log.LevelInfo),
+			log.NewColorTerminalTarget(os.Stderr, log.LevelWarn, log.LevelFatal),
+		)
 	}
 }

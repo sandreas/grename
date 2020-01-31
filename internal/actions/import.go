@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/sandreas/afero"
+	"github.com/sandreas/log"
 	"github.com/urfave/cli/v2"
 	"grename/internal/crypt"
 	"grename/internal/database"
-	"grename/internal/log"
 	"grename/internal/metadata"
 	"lukechampine.com/blake3"
 	"os"
@@ -60,24 +60,14 @@ func listNodeFields(node parse.Node, res []string) []string {
 }
 
 func (action *Import) Execute(c *cli.Context) error {
-	var err error
-
-	log.WithTargets(
-		log.NewColorTerminalTarget(os.Stdout, log.LevelDebug, log.LevelInfo),
-		log.NewColorTerminalTarget(os.Stderr, log.LevelWarn, log.LevelFatal),
-		log.NewFileWrapperTarget(CreateDefaultLogFileName(ProjectName, "main.log"), log.LevelDebug, log.LevelFatal),
-	)
+	settings := parseActionParams(c)
+	initLogging(settings)
 	defer log.Flush()
 
-	log.Debug("Debug")
-	log.Info("Info")
-	log.Warn("Warn")
-	log.Error("Error")
-	log.Fatal("Fatal")
-
+	var err error
 	importPath := filepath.Clean(c.Args().First())
 	destinationPath := filepath.Clean(c.Args().Get(1))
-	dbPath := filepath.Clean(destinationPath + "/grename.db")
+	dbPath := filepath.Clean(fmt.Sprintf("%s/%s.db", destinationPath, ProjectName))
 	importSettings := []*ImportSetting{
 		{
 			MimeTypes:    []string{"image"},
@@ -243,13 +233,13 @@ func (action *Import) Execute(c *cli.Context) error {
 			println("remove: " + importFile.Source)
 		}
 
-		//var f models.File
+		//var f models.FileMeta
 		//db.First(f)
 		//println("renameTemplate: " + renameTemplate)
 		//println("importPath: " + importPath)
 		//println("destinationPath: " + f.Location)
 		//println(m)
-		//println(m.File.MimeType.String())
+		//println(m.FileMeta.MimeType.String())
 		//println(m.Exif.Make)
 		//println(m.Exif.Model)
 		//println(m.Exif.DateTime.Format("2006-01-02 03:04:05"))

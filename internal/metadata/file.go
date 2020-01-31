@@ -6,17 +6,16 @@ import (
 	"strings"
 )
 
-type File struct {
+type FileMeta struct {
 	Extension string
 	MimeType  *mimetype.MIME
 }
 
-func fileReadFromFile(filepathArgument string) (*File, error) {
-	f := new(File)
-	f.Extension = strings.TrimPrefix(filepath.Ext(filepathArgument), ".")
-	mime, err := mimetype.DetectFile(filepathArgument)
+func (f *FileMeta) ReadFromFile(filename string) error {
+	f.Extension = strings.TrimPrefix(filepath.Ext(filename), ".")
+	mime, err := mimetype.DetectFile(filename)
 	if err == nil {
 		f.MimeType = mime
 	}
-	return f, err
+	return err
 }

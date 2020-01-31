@@ -8,6 +8,7 @@ require (
 	github.com/gabriel-vasile/mimetype v1.0.1
 	github.com/jinzhu/gorm v1.9.12
 	github.com/sandreas/afero v1.2.3
+	github.com/sandreas/log v0.0.0-20200128061605-a0c5436a5b40
 	github.com/satori/go.uuid v1.2.0
 	github.com/urfave/cli/v2 v2.1.1
 	lukechampine.com/blake3 v0.3.0
